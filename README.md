@@ -41,7 +41,9 @@ Then prepare the reference transcript sequences for salmon:
 ```
 # Set number of threads to be used in salmon read quntification process
 THREADS=8
-# Run salmon quantification for each sample. The fastq files are clean with adapters, barcodes, and low-quality terminal bases removed, which could be either compressed or not. If the fastq files are not in the current working fold, their full paths should be supplied.
+# Run salmon quantification for each sample. The fastq files are clean with adapters, barcodes, and low-quality 
+# terminal bases removed, which could be either compressed or not. If the fastq files are not in the current working
+# fold, their full paths should be supplied.
 for SAMP in sample1 sample2 sample3 (...) sampleN; do
 salmon quant -i DVS_masked -l A --useVBOpt \
          -1 ${SAMP}_1.fq.gz \
@@ -51,20 +53,23 @@ done
 ```
 4. Run R script for differential expression analysis at both the allele- and orthogroup-level
 First, prepare a tab delimited sample information table file SAMPLE_INFO.tsv.
-\# Sample info table should contain two columns named 'sample' and 'condition', the sample names must be the same as those used in the 3rd step above
-\# Only two conditions are allowed in the table. If multiple condititions are to be compared pairwisely, you should parepare multiple sample information tables accordingly.
 
-sample	condition
-CK1	CK
-CK2	CK
-CK3	CK
-SF1	SF
-SF2	SF
-SF3	SF
+\# Sample info table should contain two columns named 'sample' and 'condition', the sample names must be the same as those used in the 3rd step above
+
+\# Only two conditions are allowed in the table. If multiple condititions are to be compared pairwisely, you should parepare multiple sample information tables
+
+SAMPLE_INFO.tsv:
+
+![image](https://user-images.githubusercontent.com/46752436/192543369-0e7d3ebd-6094-435a-9f92-128662009d1e.png)
+
 
 Second, run DVS_RNASEQ.R using the provided SAMPLE_INFO.tsv
 ```
 # The R script should be run in the same working dir as the salmon quant command
-# The two tables TR_DVS_GENE.FINAL.tsv and TX_DVS_ORTHOGROUP.FINAL.tsv supplied in the folder 
+# The two table files TR_DVS_GENE.FINAL.tsv and TX_DVS_ORTHOGROUP.FINAL.tsv in the folder allele-aware-RNAseq-pipeline 
+# should be provided in the current working dir
+# The differential expression analysis results will be found in condition1_vs_condition2.allele.tsv (allele-level) and 
+# condition1_vs_condition2.orthogroup.tsv (orthogroup-level)
+./DVS_RNASEQ.R SAMPLE_INFO.tsv
 ```
 
