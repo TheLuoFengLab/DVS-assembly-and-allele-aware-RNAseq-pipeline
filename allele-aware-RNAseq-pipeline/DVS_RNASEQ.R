@@ -46,7 +46,7 @@ cond <- levels(samples$condition)
 NAME <- paste(cond[1],"_vs_",cond[2],'.allele.tsv',sep="")
 write.table(res[order(res$padj),],NAME)
 
-tx2orthogroup <- read.table("TX_ORTHOGROUP.FINAL.tsv",header=TRUE)
+tx2orthogroup <- read.table("TR_DVS_ORTHOGROUP.FINAL.tsv",header=TRUE)
 txi <- tximport(files, type="salmon", tx2gene=tx2orthogroup)
 dds <- DESeqDataSetFromTximport(txi,colData = samples,design = ~ condition)
 keep <- rowSums(counts(dds)) >= 10
