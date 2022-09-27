@@ -16,8 +16,8 @@ raw contigs with the expanded or collapsed regions and their upstream and downst
      - tximportdata v1.22.0
      - readr v2.1.2
    
-   # Could use conda to automatically install all the packages using the file DVS_RNASEQ_environment.yaml, which will create an environment named DVS_RNASEQ
-   conda env create -f DVS_RNASEQ_environment.yaml
-   # Activate the conda environment
+   \# Could use conda to automatically install all the packages using the file DVS_RNASEQ_environment.yaml, which will create an environment named DVS_RNASEQ
+   > conda env create -f DVS_RNASEQ_environment.yaml
+   \# Activate the conda environment
    conda activate DVS_RNASEQ
 2. 
