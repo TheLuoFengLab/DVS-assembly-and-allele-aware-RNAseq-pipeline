@@ -16,17 +16,17 @@ raw contigs with the expanded or collapsed regions and their upstream and downst
      - tximportdata v1.22.0
      - readr v2.1.2
 ```  
-    \# Could use conda to automatically install all the packages using the file DVS_RNASEQ_environment.yaml, 
-    \# which will create an environment named DVS_RNASEQ
+    # Could use conda to automatically install all the packages using the file DVS_RNASEQ_environment.yaml, 
+    # which will create an environment named DVS_RNASEQ
     conda env create -f DVS_RNASEQ_environment.yaml
-    \# Activate the conda environment
+    # Activate the conda environment
     conda activate DVS_RNASEQ
 ```
 2. The masked DVS assembly and gene structure annotation files (CK2021.09202021.NCBI.fasta and CK2021.09202021.NCBI.gff3) are accessible from https://doi.org/10.6084/m9.figshare.19127066.v1
 Then prepare the reference transcript sequences for salmon: 
-'''
+```  
     \# Output transcripts from DVS genome
-    gffread CK2021.09202021.NCBI.gff3 -g CK2021.09202021.NCBI.fasta -w DVS_masked.transcripts.fasta
+    gffread DVS.09202021.masked.gff3 -g DVS.09202021.masked.fasta -w DVS_masked.transcripts.fasta
 
     \# Preparing fully decoyed transcript index
     \# Salmon tutorial from https://combine-lab.github.io/salmon/getting_started/#indexing-txome
@@ -36,6 +36,35 @@ Then prepare the reference transcript sequences for salmon:
 
     \# Index the transcript fasta file from DVS
     salmon index -t DVS_masked.decoy.fasta -d decoys.txt -p 8 -i DVS_masked --gencode
-'''
+```  
+3. Run salmon quntification on RNA-seq data of each sample separately with option --useVBOpt (Use the Variational Bayesian EM for multiple-mapped read counting)
+```
+# Set number of threads to be used in salmon read quntification process
+THREADS=8
+# Run salmon quantification for each sample. The fastq files are clean with adapters, barcodes, and low-quality terminal bases removed, which could be either compressed or not. If the fastq files are not in the current working fold, their full paths should be supplied.
+for SAMP in sample1 sample2 sample3 (...) sampleN; do
+salmon quant -i DVS_masked -l A --useVBOpt \
+         -1 ${SAMP}_1.fq.gz \
+         -2 ${SAMP}_2.fq.gz \
+         -p $THREADS --validateMappings -o quants/${SAMP}
+done
+```
+4. Run R script for differential expression analysis at both the allele- and orthogroup-level
+First, prepare a tab delimited sample information table file SAMPLE_INFO.tsv.
+\# Sample info table should contain two columns named 'sample' and 'condition', the sample names must be the same as those used in the 3rd step above
+\# Only two conditions are allowed in the table. If multiple condititions are to be compared pairwisely, you should parepare multiple sample information tables accordingly.
 
+sample	condition
+CK1	CK
+CK2	CK
+CK3	CK
+SF1	SF
+SF2	SF
+SF3	SF
+
+Second, run DVS_RNASEQ.R using the provided SAMPLE_INFO.tsv
+```
+# The R script should be run in the same working dir as the salmon quant command
+# The two tables TR_DVS_GENE.FINAL.tsv and TX_DVS_ORTHOGROUP.FINAL.tsv supplied in the folder 
+```
 
