@@ -15,9 +15,27 @@ raw contigs with the expanded or collapsed regions and their upstream and downst
      - tximport v1.22.0
      - tximportdata v1.22.0
      - readr v2.1.2
-   
-   \# Could use conda to automatically install all the packages using the file DVS_RNASEQ_environment.yaml, which will create an environment named DVS_RNASEQ
-   > conda env create -f DVS_RNASEQ_environment.yaml
-   \# Activate the conda environment
-   conda activate DVS_RNASEQ
-2. 
+```  
+    \# Could use conda to automatically install all the packages using the file DVS_RNASEQ_environment.yaml, 
+    \# which will create an environment named DVS_RNASEQ
+    conda env create -f DVS_RNASEQ_environment.yaml
+    \# Activate the conda environment
+    conda activate DVS_RNASEQ
+```
+2. The masked DVS assembly and gene structure annotation files (CK2021.09202021.NCBI.fasta and CK2021.09202021.NCBI.gff3) are accessible from https://doi.org/10.6084/m9.figshare.19127066.v1
+Then prepare the reference transcript sequences for salmon: 
+'''
+    \# Output transcripts from DVS genome
+    gffread CK2021.09202021.NCBI.gff3 -g CK2021.09202021.NCBI.fasta -w DVS_masked.transcripts.fasta
+
+    \# Preparing fully decoyed transcript index
+    \# Salmon tutorial from https://combine-lab.github.io/salmon/getting_started/#indexing-txome
+    grep "^>" CK2021.09202021.NCBI.fasta | cut -d " " -f 1 > decoys.txt
+    sed -i.bak -e 's/>//g' decoys.txt
+    cat DVS_masked.transcripts.fasta CK2021.09202021.NCBI.fasta > DVS_masked.decoy.fasta
+
+    \# Index the transcript fasta file from DVS
+    salmon index -t DVS_masked.decoy.fasta -d decoys.txt -p 8 -i DVS_masked --gencode
+'''
+
+
