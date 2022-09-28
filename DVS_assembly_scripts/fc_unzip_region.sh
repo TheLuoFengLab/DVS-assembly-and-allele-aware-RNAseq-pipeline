@@ -1,10 +1,10 @@
 #!/bin/bash
 #${1} main contig
-#${2} main contig diploid region
+#${2} main contig collapsed or expanded region and its upstream and downstream 50 kbp regions
 #${3} alternative contig 1
-#${4} alternative contig 1 end 10kb region
+#${4} alternative contig 1 terminal 50kb region (collapsed region) or expanded region plus adjacent 50 kbp 
 #${5} alternative contig 2
-#${6} alternative contig 2 end 10kb region
+#${6} alternative contig 2 terminal 50kb region (collapsed region) or expanded region plus adjacent 50 kbp 
 BAM=$7 #Path to the bam file in which all the Pacbio CLR reads have been mapped back to the CANU raw assembly using minimap2 
 SUBREADS=$8 #Path to the raw Pacbio CLR subread bam file that contains the pulse level signals
 
