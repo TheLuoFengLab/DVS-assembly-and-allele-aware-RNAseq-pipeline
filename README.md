@@ -22,19 +22,18 @@ raw contigs with the expanded or collapsed regions and their upstream and downst
     # Activate the conda environment
     conda activate DVS_RNASEQ
 ```
-2. The masked DVS assembly and gene structure annotation files (CK2021.09202021.NCBI.fasta and CK2021.09202021.NCBI.gff3) are accessible from https://doi.org/10.6084/m9.figshare.19127066.v1
-Then prepare the reference transcript sequences for salmon: 
+2. The masked DVS assembly and gene structure annotation files (CK2021.09202021.NCBI.fasta and CK2021.09202021.NCBI.gff3) are accessible from https://doi.org/10.6084/m9.figshare.19127066.v1. Prepare the reference transcript sequences for salmon: 
 ```  
-    \# Output transcripts from DVS genome
+    # Output transcripts from DVS genome
     gffread DVS.09202021.masked.gff3 -g DVS.09202021.masked.fasta -w DVS_masked.transcripts.fasta
 
-    \# Preparing fully decoyed transcript index
-    \# Salmon tutorial from https://combine-lab.github.io/salmon/getting_started/#indexing-txome
+    # Preparing fully decoyed transcript index
+    # Salmon tutorial from https://combine-lab.github.io/salmon/getting_started/#indexing-txome
     grep "^>" CK2021.09202021.NCBI.fasta | cut -d " " -f 1 > decoys.txt
     sed -i.bak -e 's/>//g' decoys.txt
     cat DVS_masked.transcripts.fasta CK2021.09202021.NCBI.fasta > DVS_masked.decoy.fasta
 
-    \# Index the transcript fasta file from DVS
+    # Index the transcript fasta file from DVS
     salmon index -t DVS_masked.decoy.fasta -d decoys.txt -p 8 -i DVS_masked --gencode
 ```  
 3. Run salmon quntification on RNA-seq data of each sample separately with option --useVBOpt (Use the Variational Bayesian EM for multiple-mapped read counting)
