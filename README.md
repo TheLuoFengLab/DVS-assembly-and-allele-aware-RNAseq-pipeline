@@ -29,9 +29,9 @@ raw contigs with the expanded or collapsed regions and their upstream and downst
 
     # Preparing fully decoyed transcript index
     # Salmon tutorial from https://combine-lab.github.io/salmon/getting_started/#indexing-txome
-    grep "^>" CK2021.09202021.NCBI.fasta | cut -d " " -f 1 > decoys.txt
+    grep "^>" DVS.09202021.masked.fasta | cut -d " " -f 1 > decoys.txt
     sed -i.bak -e 's/>//g' decoys.txt
-    cat DVS_masked.transcripts.fasta CK2021.09202021.NCBI.fasta > DVS_masked.decoy.fasta
+    cat DVS_masked.transcripts.fasta DVS.09202021.masked.fasta > DVS_masked.decoy.fasta
 
     # Index the transcript fasta file from DVS
     salmon index -t DVS_masked.decoy.fasta -d decoys.txt -p 8 -i DVS_masked --gencode
